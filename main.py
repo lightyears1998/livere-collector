@@ -1,10 +1,13 @@
 import json
 
+"""
+尝试做一个来必力的评论收集器
+目前还没有写注释
+@TODO 为parse函数添加异常处理代码
+"""
+
 
 def get_input():
-    """
-    从命令行获取输入
-    """
     data = input()
     while 1:
         nxt = input()
@@ -16,7 +19,10 @@ def get_input():
 
 
 def parse(data):
-    root = json.loads(data)
+    try:
+        root = json.loads(data)
+    except:
+        print('解析时似乎出现了错误')
     results = root.get('results')
     parents = results.get('parents')
     children = results.get('children')
