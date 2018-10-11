@@ -3,7 +3,7 @@
 ## 使用环境
 
 1. Python3
-2. Python Lib Scrapy
+2. <del>Python Lib Scrapy</del>
 
 ## LiveRe JS的工作方式
 
@@ -13,3 +13,4 @@
 
 ### List API响应JSON的结构
 
+待添加
