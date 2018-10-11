@@ -26,7 +26,8 @@ def get_multiple_input(hint: str=''):
 
 def resolve_list_api(payload: str):
     list_api_json = get_list_api_json_from_payload(payload)
-    return resolve_list_api_json(list_api_json)
+    ret = resolve_list_api_json(list_api_json)
+    return ret
 
 
 def get_list_api_json_from_payload(payload: str):
