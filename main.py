@@ -1,5 +1,5 @@
 import json
-
+import tkinter as tk
 
 def get_multiple_input(hint: str=''):
     """
@@ -14,11 +14,11 @@ def get_multiple_input(hint: str=''):
 
 
 def resolve_list_api(payload: str):
-    data = resolve_list_api_payload(payload)
-    return resolve_list_api_json(data)
+    list_api_json = get_list_api_json_from_payload(payload)
+    return resolve_list_api_json(list_api_json)
 
 
-def resolve_list_api_payload(payload: str):
+def get_list_api_json_from_payload(payload: str):
     payload = ''.join(payload.split('\n'))  # 如果响应负载为多行形式，将负载合并为一行
     data = payload.split('(', 1)[1].rstrip(');')  # 从响应负载中获取Json数据
     return data
@@ -28,7 +28,7 @@ def resolve_list_api_json(data: str):
     try:
         root = json.loads(data)
     except json.decoder.JSONDecodeError as e:
-        print('解析Json数据时出现问题')
+        print('JSON数据的格式不正确')
         print(e)
     else:
         results = root.get('results')
@@ -44,10 +44,25 @@ def resolve_list_api_json(data: str):
             print(name, content)
 
 
+def on_button_click():
+    print('aa')
+
+
 def main():
-    print('来必力评论采集工具v0.3')
-    text = get_multiple_input("在此处黏贴List API的响应:\n")
-    resolve_list_api(text)
+    window = tk.Tk()
+    window.title('来必力评论采集工具v0.4')
+    window.geometry('480x320')
+
+    payload_entry = tk.Entry(window)
+    payload_entry.pack()
+
+    button = tk.Button(window, text='解析', command=on_button_click)
+    button.pack()
+
+    result_text = tk.Text(window)
+    result_text.pack()
+
+    window.mainloop()
 
 
 if __name__ == '__main__':
