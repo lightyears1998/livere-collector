@@ -1,6 +1,17 @@
 import json
 import tkinter as tk
 
+intro = """v0.4只能提取评论中的作者和评论内容o(*￣▽￣*)ブ
+
+使用步骤
+=======
+1. 打开含有来必力的网站，并启用开发人员工具
+2. 切换到开发人员工具的网络选项卡，寻找一个以“list?callback=...”开头的GET请求
+3. 单击这个请求，在右侧弹出的面板中选择“响应”选项卡
+4. 将该请求的响应载荷（payload）复制到“解析”按钮上方的文本框中，按下“解析”按钮
+"""
+
+
 def get_multiple_input(hint: str=''):
     """
     从标准输入中获取多行输入，以空行为结束标志
@@ -60,6 +71,8 @@ def main():
         result_text.insert(tk.END, resolve_list_api(payload_text.get('1.0', tk.END)))
 
     button = tk.Button(window, text='解析', command=on_button_click)
+
+    result_text.insert(tk.END, intro)  # 向对话框中插入注释
 
     payload_text.pack()
     button.pack()
