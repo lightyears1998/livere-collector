@@ -1,39 +1,35 @@
 import json
-import re
-
-"""
-尝试做一个来必力的评论收集器
-目前还没有写注释
-@TODO 为parse函数添加异常处理代码
-"""
 
 
-def get_multiple_input():
+def get_multiple_input(hint: str=''):
     """
     从标准输入中获取多行输入，以空行为结束标志
     :return: 获取的输入，每行输入用'\n'连接，作为结束标志的空行不返回
     """
+    print(hint, end='')
     lines = []
     for line in iter(input, ''):
         lines.append(line)
     return '\n'.join(lines)
 
 
-def parse_list_query_payload(payload: str):
+def resolve_list_api(payload: str):
+    data = resolve_list_api_payload(payload)
+    return resolve_list_api_json(data)
+
+
+def resolve_list_api_payload(payload: str):
     payload = ''.join(payload.split('\n'))  # 如果响应负载为多行形式，将负载合并为一行
     data = payload.split('(', 1)[1].rstrip(');')  # 从响应负载中获取Json数据
     return data
 
 
-def parse_list_query_json(data: str):
-    return 2
-
-
-def parse(data):
+def resolve_list_api_json(data: str):
     try:
         root = json.loads(data)
-    except json.decoder.JSONDecodeError:
-        print('解析时似乎出现了错误')
+    except json.decoder.JSONDecodeError as e:
+        print('解析Json数据时出现问题')
+        print(e)
     else:
         results = root.get('results')
         parents = results.get('parents')
@@ -49,9 +45,9 @@ def parse(data):
 
 
 def main():
-    print('来必力评论采集工具v0.2')
-    text = get_multiple_input()
-    print(parse_list_query_payload(text))
+    print('来必力评论采集工具v0.3')
+    text = get_multiple_input("在此处黏贴List API的响应:\n")
+    resolve_list_api(text)
 
 
 if __name__ == '__main__':
