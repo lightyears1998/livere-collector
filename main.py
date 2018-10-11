@@ -25,11 +25,12 @@ def get_list_api_json_from_payload(payload: str):
 
 
 def resolve_list_api_json(data: str):
+    lines = []
     try:
         root = json.loads(data)
     except json.decoder.JSONDecodeError as e:
-        print('JSON数据的格式不正确')
-        print(e)
+        lines.append('JSON数据的格式不正确')
+        lines.append(e)
     else:
         results = root.get('results')
         parents = results.get('parents')
@@ -37,15 +38,13 @@ def resolve_list_api_json(data: str):
         for comment in parents:
             name = comment.get('name')
             content = comment.get('content')
-            print(name, content)
+            lines.append('\n'.join([name, content]))
         for comment in children:
             name = comment.get('name')
             content = comment.get('content')
-            print(name, content)
-
-
-def on_button_click():
-    print('aa')
+            lines.append('\n'.join([name, content]))
+    finally:
+        return '\n\n'.join(lines)
 
 
 def main():
@@ -53,13 +52,17 @@ def main():
     window.title('来必力评论采集工具v0.4')
     window.geometry('480x320')
 
-    payload_entry = tk.Entry(window)
-    payload_entry.pack()
+    payload_text = tk.Text(window, height=1)
+    result_text = tk.Text(window)
+
+    def on_button_click():
+        result_text.delete('1.0', tk.END)
+        result_text.insert(tk.END, resolve_list_api(payload_text.get('1.0', tk.END)))
 
     button = tk.Button(window, text='解析', command=on_button_click)
-    button.pack()
 
-    result_text = tk.Text(window)
+    payload_text.pack()
+    button.pack()
     result_text.pack()
 
     window.mainloop()
