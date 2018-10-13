@@ -1,3 +1,5 @@
+import time
+import re
 import json
 import tkinter as tk
 
@@ -22,6 +24,19 @@ def get_multiple_input(hint: str=''):
     for line in iter(input, ''):
         lines.append(line)
     return '\n'.join(lines)
+
+
+def deal_with_time(date: str):
+    print(date)
+    pattern = r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})T(?P<hour>\d{2}):(?P<minute>\d{2}):(?P<second>\d{2}).*'
+    match = re.match(pattern, date)
+    year = int(match.group('year'))
+    month = int(match.group('month'))
+    day = int(match.group('day'))
+    hour = int(match.group('hour'))
+    minute = int(match.group('minute'))
+    second = int(match.group('second'))
+    return None
 
 
 def resolve_list_api(payload: str):
@@ -49,6 +64,8 @@ def resolve_list_api_json(data: str):
         children = results.get('children')
         for comment in parents:
             name = comment.get('name')
+            date = comment.get('regdate')
+            deal_with_time(date)
             content = comment.get('content')
             lines.append('\n'.join([name, content]))
         for comment in children:
