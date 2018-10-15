@@ -27,16 +27,21 @@ def get_multiple_input(hint: str=''):
 
 
 def deal_with_time(date: str):
-    print(date)
-    pattern = r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})T(?P<hour>\d{2}):(?P<minute>\d{2}):(?P<second>\d{2}).*'
+    """
+    从utc时间转换到本地时间
+    :param date: 形如“2018-10-08T06:23:34.000Z”的utc时间串
+    :return: 本地时间字符串
+    """
+    pattern = r'(?P<year>\d{4})-(?P<mon>\d{2})-(?P<day>\d{2})T(?P<hour>\d{2}):(?P<min>\d{2}):(?P<sec>\d{2}).*'
     match = re.match(pattern, date)
     year = int(match.group('year'))
-    month = int(match.group('month'))
+    mon = int(match.group('mon'))
     day = int(match.group('day'))
     hour = int(match.group('hour'))
-    minute = int(match.group('minute'))
-    second = int(match.group('second'))
-    return None
+    min = int(match.group('min'))
+    sec = int(match.group('sec'))
+    time.strptime()
+    return '{}-{}-{} {:02}:{:02}:{:02}'.format(year, mon, day, hour, min, sec)  # 注意这个时间是UTC
 
 
 def resolve_list_api(payload: str):
@@ -64,12 +69,12 @@ def resolve_list_api_json(data: str):
         children = results.get('children')
         for comment in parents:
             name = comment.get('name')
-            date = comment.get('regdate')
-            deal_with_time(date)
+            name = name + ' (' + deal_with_time(comment.get('regdate')) + ')'
             content = comment.get('content')
             lines.append('\n'.join([name, content]))
         for comment in children:
             name = comment.get('name')
+            name = name + ' (' + deal_with_time(comment.get('regdate')) + ')'
             content = comment.get('content')
             lines.append('\n'.join([name, content]))
     finally:
