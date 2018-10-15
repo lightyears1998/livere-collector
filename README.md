@@ -1,6 +1,6 @@
 # LiveRe评论采集器
 
-![屏幕截图](docs/screenshoot.png)
+<img src="https://raw.githubusercontent.com/lightyears1998/livere-collector/master/docs/screenshoot.png" alt="screenshoot.png" width="480px">
 
 ## 使用环境
 
