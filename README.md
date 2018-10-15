@@ -1,5 +1,7 @@
 # LiveRe评论采集器
 
+![屏幕截图](docs/screenshoot.png)
+
 ## 使用环境
 
 1. Python3

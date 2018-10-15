@@ -1,9 +1,10 @@
 import time
+import datetime
 import re
 import json
 import tkinter as tk
 
-intro = """v0.4只能提取评论中的作者和评论内容o(*￣▽￣*)ブ
+intro = """v0.5增加了提取评论时间的功能o(*￣▽￣*)ブ
 
 使用步骤
 =======
@@ -26,22 +27,22 @@ def get_multiple_input(hint: str=''):
     return '\n'.join(lines)
 
 
-def deal_with_time(date: str):
-    """
-    从utc时间转换到本地时间
-    :param date: 形如“2018-10-08T06:23:34.000Z”的utc时间串
-    :return: 本地时间字符串
-    """
-    pattern = r'(?P<year>\d{4})-(?P<mon>\d{2})-(?P<day>\d{2})T(?P<hour>\d{2}):(?P<min>\d{2}):(?P<sec>\d{2}).*'
-    match = re.match(pattern, date)
-    year = int(match.group('year'))
-    mon = int(match.group('mon'))
-    day = int(match.group('day'))
-    hour = int(match.group('hour'))
-    min = int(match.group('min'))
-    sec = int(match.group('sec'))
-    time.strptime()
-    return '{}-{}-{} {:02}:{:02}:{:02}'.format(year, mon, day, hour, min, sec)  # 注意这个时间是UTC
+def deal_with_time(utc: str):
+    utc = datetime.datetime.strptime(utc, '%Y-%m-%dT%H:%M:%S.%fZ')  # 注意该时间的时区是UTC
+    local = utc2local(utc)  # 将UTC时间转换为本地时间
+    return ' (' + local.strftime('%Y-%m-%d %H:%M:%S') + ')'
+
+
+def utc2local(utc: datetime.datetime):
+    now = time.time()
+    offset = datetime.datetime.fromtimestamp(now) - datetime.datetime.utcfromtimestamp(now)
+    return utc + offset
+
+
+def local2utc(local: datetime.datetime):
+    now = time.time()
+    offset = datetime.datetime.utcfromtimestamp(now) - datetime.datetime.fromtimestamp(now)
+    return local + offset
 
 
 def resolve_list_api(payload: str):
@@ -69,12 +70,12 @@ def resolve_list_api_json(data: str):
         children = results.get('children')
         for comment in parents:
             name = comment.get('name')
-            name = name + ' (' + deal_with_time(comment.get('regdate')) + ')'
+            name = name + deal_with_time(comment.get('regdate'))
             content = comment.get('content')
             lines.append('\n'.join([name, content]))
         for comment in children:
             name = comment.get('name')
-            name = name + ' (' + deal_with_time(comment.get('regdate')) + ')'
+            name = name + deal_with_time(comment.get('regdate'))
             content = comment.get('content')
             lines.append('\n'.join([name, content]))
     finally:
@@ -95,7 +96,7 @@ def main():
 
     button = tk.Button(window, text='解析', command=on_button_click)
 
-    result_text.insert(tk.END, intro)  # 向对话框中插入注释
+    result_text.insert(tk.END, intro)  # 向对话框中插入程序简介
 
     payload_text.pack()
     button.pack()
