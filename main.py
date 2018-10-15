@@ -84,7 +84,7 @@ def resolve_list_api_json(data: str):
 
 def main():
     window = tk.Tk()
-    window.title('来必力评论采集工具v0.4')
+    window.title('来必力评论采集工具v0.5')
     window.geometry('480x320')
 
     payload_text = tk.Text(window, height=1)
